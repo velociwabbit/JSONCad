@@ -1,0 +1,101 @@
+<html>
+<head>
+ <title>JSONCad Parser Example 1</title>
+<script type="text/javascript" src="three70.js"							></script>
+<script type="text/javascript" src="OrthographicTrackballControls.js"	></script> 
+<script type="text/javascript" src="potree.js"							></script>
+<script type="text/javascript" src="BinaryLoader.js"					></script>
+<script type="text/javascript" src="csg.js"								></script> 
+<script type="text/javascript" src="threecsg.js"						></script> 
+<script type="text/javascript" src="Arial Narrow_Regular.js"			></script>
+<script type="text/javascript" src="openscad.js"						></script> 
+<script type="text/javascript" src="jsoncad_base.js"					></script>
+<script type="text/javascript" src="jsoncad_parser.js"					></script>
+<script type="text/javascript" src="jsoncad_annotate.js"				></script>
+<script type="text/javascript" >
+ 
+ 
+//Three.js Parsing JSON structure 
+// Note that this example uses synchronous xhr to externally load and run the example00f translation to jsoncad (gazebo.js)
+// note that Gazebo JS generates two gazebos and the call to the external file is called with neutral sizing and coordinates 
+// (but with a new color)
+
+var nodes = {
+ 	 
+    'TEST_LIST': {
+ 
+        'EX5X': ['GOBJ', ['GAZEBOS',  'gazebo.js','nodeext', 1, null]			, [	{x:    0  ,y:  0 ,z:   0	,r1: {axis: 0,degrees: 0},r2: {axis:   0,degrees:    0},color: [0, 1, 1,1] ,size: [1, 1, 1]}
+	 		  ]
+         ]
+    }
+}
+// JSCad annoations that reside in 3d Scene space
+var node3s = {
+				'veyron'	: ['LOD3'
+							, ['loadurl3',  'obj/veyron/VeyronNoUv_bin.js'		, { mats :  ['Red' , 'Pure chrome' , 'Red metal' , 'Dark glass', 'Pure chrome', 'Pure chrome' , 'Red glass 50', 'Orange glass 50'], face : null, mmap : [] }	, 1, null]	
+							, [	{x: 100 ,y: -25, z: -20		,rotation :	[0, Math.PI -   Math.PI /12 ,0] , scale: [.04, .04, .04]}] 
+							]  	 
+				,'gallardo' : ['LOD3'
+							, ['loadurl3',  'obj/gallardo/GallardoNoUv_bin.js'	, { mats :  [  'Pure chrome', 'Black rough', 'White', 'Dark glass', 'Pure chrome' , 'Pure chrome' , 'Red glass 50' , 'Orange glass 50' ], face : null	, mmap : []}, 1, null]	
+							, [	{x:-38 ,y: -2.5,z: 10		,rotation : [0, -Math.PI/9 ,-Math.PI/12] , scale: [.03, .03, .03]}] 
+ 							] 
+				,'camaro'	: ['LOD3'
+							, ['loadurl3',  'obj/camaro/CamaroNoUv_bin.js' ,	{ mats :  [  'Blue', 'Pure chrome', 'Pure chrome', 'Dark chrome', 'Light glass', 'Gray shiny', 'Black rough', 'Fullblack rough', 'Fullblack rough'], face : null							, mmap : []}, 1, null]	
+ 							, [	{x:     -80,y:   6,z:   102 ,rotation : [ Math.PI/10, -Math.PI/2 ,  Math.PI/10] , scale: [.75,.75,.75]}]  
+ 							] 		   	 
+}; 
+ 
+//	
+// Images and text that front end the WebGL rendering DOM element 
+//	
+ var	headsUpDisplay = { 
+			    id :	'imageid'
+			, frame: 	'acadtemplate1.png'	 
+			, etxt : [	  
+			 {x : 1330 ,y : 580 , rz : -90 ,color : 'blue'			,fontsz : 52 ,scale: 1 ,strng : "XXX  FRAME"							} 
+			,{x : 1410 ,y : 580 , rz : -90 ,color : 'blue'			,fontsz : 52 ,scale: 1 ,strng : "XXXX YYYYYYY "							} 
+			,{x : 1300 ,y : 650 , rz :   0 ,color : 'blue'			,fontsz : 14 ,scale: 1 ,strng : "Ima Notta P.E"							} 
+			,{x : 1375 ,y : 844 , rz :   0 ,color : 'blue'			,fontsz : 30 ,scale: 1 ,strng : "M-2"									} 
+			,{x : 100  ,y : 100 , rz :   0 ,color : 'deeppink'		,fontsz : 40 ,scale: 1 ,strng : "The Web is Alive... "					} 
+			,{x : 400  ,y : 144 , rz :   0 ,color : 'darkmagenta'	,fontsz : 60 ,scale: 1 ,strng : "With The Fun of OpenJSONCad!"			} 
+			,{x : 825  ,y : 250 , rz :   0 ,color : 'deepskyblue'	,fontsz : 30 ,scale: 1 ,strng : "(Dough I Hear... Is Very Near!)"		} 
+										]
+};	
+//	
+//	The entire set of options sent to JSCad/Three.js/SVG to render and view online
+//	
+	
+ var options ={
+		 this_				:	null	
+		,containerElm_		:	document.getElementById("viewer")		
+		,widthDefault_		:	"1600px"								
+		,heightDefault_		:	"900px"										
+		,width_				:	"1600px"									
+		,height_			:	"900px"									
+		,heightRatio_		:	16/9 									
+		,perspective_		:	45
+		,drawOptions_		:	{ lines : false, faces : true}
+		,defaultColor_		:	[ 0, 0, 1   ,1]
+		,bgColor_			:	[.93,.93,.93,1]
+		,drawFaces_			:	true	
+		,background_		:	true
+		,drawLines_			:	false 	
+		,csgScript_			:	"jscad.jscad"	
+ 		,headsUpDisplay_	:		headsUpDisplay
+ 		,pointcloudName_	:		"vol_total/cloud.js"
+		,threeJSEnvObjs_	: 		node3s		
+		,threeJSAnnotate_	:   null
+		,camera_			:  'persp'
+		,renderer_			:  'webgl'
+		,controls_			:  'ortho'
+};	
+	var gViewer		= null;
+	function document_ready(){  	gViewer	 =	new OpenJSONCad.Viewer( options); 	};
+ </script>
+ <script id="jscad.jscad"  >function main() {  return makeVirtualObject(nodes['TEST_LIST'] );}</script>
+</head>
+<body  onload="document_ready()" >	
+</body>
+</html>
+
+ 
