@@ -1,0 +1,183 @@
+<html>
+<head>
+ <title>testviewer</title>
+<script type="text/javascript" src="three70.js"							></script>
+<script type="text/javascript" src="OrthographicTrackballControls.js"	></script> 
+<script type="text/javascript" src="potree.js"							></script>
+<script type="text/javascript" src="BinaryLoader.js"					></script>
+<script type="text/javascript" src="csg.js"								></script> 
+<script type="text/javascript" src="threecsg.js"						></script> 
+<script type="text/javascript" src="Arial Narrow_Regular.js"			></script>
+<script type="text/javascript" src="openscad.js"						></script> 
+<script type="text/javascript" src="jsoncad_base.js"					></script>
+<script type="text/javascript" src="jsoncad_parser.js"					></script>
+<script type="text/javascript" src="jsoncad_annotate.js"				></script>
+<script type="text/javascript" >
+  //    'intersect': { // this shows a wedge manually constructed from both a cube and a zero cornederd cube (boxz)  
+    //        
+    //         'BLOCK1': ['CUBE', [5, 5, 5, 10, [0, 1, 0, 1]], [{x: 0,y: 0,z: 0,r1: {axis: 3,degrees: 45},r2: {axis: 0,degrees: 0},color: [1, 0, 0, 1],size: [1, 1, 1] }]]
+    //        ,'BLOCK2': ['BOXZ', [5, 5, 5, 10, [0, 1, 0, 1]], [{x: 0,y: 0,z: 0,r1: {axis: 0,degrees: 0} ,r2: {axis: 0,degrees: 0},color: [1, 0, 0, 1],size: [1, 1, 1] }]]
+    //    
+    //    }	
+	//	
+	//	//  ,This shows a poorly executed tetrahedron.  If anyone can help me construct a better one please let me know.
+    //
+	//     'WOXTEST': ['WOXZ', [25, 25, 25, 1, [0, 0, 0, 1]], [		
+  	//									 				  {x:  0	,y: 0	,z: 0	,r1: {axis:  0,degrees: 0},r2: {axis:   0,degrees: 0} ,size: [1, 1, 1]}
+ 	//															
+	//															
+	//															]] 
+    //    ,'BOXTEST': ['CUBE', [100, 100, 1, 1, [0, 1, 1, 1]], [		
+ 	//											 				//  {x:  0	,y: 0	,z: 0	,r1: {axis:  'y' ,degrees:   45},r2: {axis:   0  ,degrees:    0},color: [1, 1, 0, 1],size: [1, 1, 1]}
+  	//											 				   {x:  0	,y: 0	,z: 25	,r1: {axis:  'x' ,degrees:  -36},r2: {axis:  'y' ,degrees:   45},color: [0, 1, 0, 1],size: [1, 1, 1]}
+ 	//											 		//		 , {x:  0	,y: 0	,z: 25	,r1: {axis:  'y' ,degrees:   45},r2: {axis:   0,degrees:  0},color: [0, 1, 0, 1],size: [1, 1, 1]}
+	//															
+	//															
+	//															]]
+	//
+  	//
+//JSCad Parsing JSON structure
+var nodes = {
+
+																	//																				if (>9) 
+				'FRAME_TOP'			 :{												// primitive	width	 height color	instances x		  y			z    r1 r2   r1	r2 
+																					//																				deg deg 
+ 											'SUBBEAM'  						: [ 'WOXZ'		,[21	,2  	,3 ]		,[	 [29	, 12 ,  0		,0	,	0	,0	,0	]]			]	
+											,'CROSSBEAM'  					: [ 'WOXZ'		,[2		,21		,3 ]		,[	 [27	, 2  ,  0		,0	,	0	,0	,0	] 
+																				 			 								,[50	, 2  ,  0		,0	,	0	,0	,0	]]			]	
+ 											,'MAINBEAM'						: [ 'WOXZ'		,[72  	,2		,3	]		,[	 [ 3	, 0	 ,  0		,0	,	0	,0	,0	]	
+																				 			 								,[ 3	, 23 ,  0		,0	,	0	,0	,0	]]			]	 
+										},										 			 
+				'FRAME_BOTTOM'			:{										 			 
+ 											 'MAINBEAM'						: [ 'WOXZ'		,[72  	,2		,3	]			,[[3	, 0	 ,	0		,0	,	0	,0	,0	]	
+																				 			 								,[3		,23  ,	0		,0	,	0	,0	,0	]]			]	 
+										},										 			 											
+				'FRAME_MID'				:{										 			 
+ 											 'MAINBEAM'						: [ 'WOXZ'		,[72  	,2		,3	]			,[[3	, 0  ,  0		,0	,	0	,0	,0	]]			]	 
+										},										 			  
+				'FRAME_END_LEFT'	   :{										 			  
+											'LONGPOST'  					: [ 'WOXZ'		,[3    ,2		,120]			,[[ 0	, 0	 ,  0		,0	,	0	,0	,0	]]			]
+																				 			  
+										,	'SHORTPOST'  					: [ 'WOXZ'		,[3    ,2		,84	]			,[[ 0	, 23 ,  0		,0	,	0	,0	,0	]]			]
+										,	'CROSSBEAM'  					: [ 'WOXZ'		,[2    ,21		,3	]			,[[ 0	, 2	 ,  0		,0	,	0	,0	,0	]	
+																				 			 								,[ 0	, 2	 , 18		,0	,	0	,0	,0	]	
+																				 			 								,[ 0	, 2	 , 81		,0	,	0	,0	,0	]	
+																				 			 								,[ 0	, 2	 , 46		,0	,	0	,0	,0	]]			]	 					
+										},										 			 															 
+ 				'FRAME_END_RIGHT'	  :{										 			 
+											'LONGPOST'  					: [ 'WOXZ'		,[3    ,2		,120]			,[[ 0	, 0	,   0		,0	,	0	,0	,0	]]			]
+										,	'SHORTPOST'  					: [ 'WOXZ'		,[3    ,2		,84	]			,[[ 0	,23 ,   0		,0	,	0	,0	,0	]]			]
+										,	'CROSSBEAM'  					: [ 'WOXZ'		,[2    ,21		,3  ]			,[[ 1	, 2	,   0		,0	,	0	,0	,0	]	
+																				 			 								,[ 1	, 2	,  18		,0	,	0	,0	,0	]	
+																				 			 								,[ 1	, 2	,  81		,0	,	0	,0	,0	]	
+																				 			 								,[ 1	, 2	,  46		,0	,	0	,0	,0	]]			]	 					
+										},										 			 
+				'ALUM_FRAME_BOTTOM'			:{									 			 
+											 'FRAME_BOTTOM'					: [ 'VOBJ'		,[1		,2		,2	]			,[[  0,  0	,  18		,0	,	0	,0	,0	]]			] 
+											,'FRAME_END_LEFT'				: [ 'VOBJ'		,[1		,4		,4	]			,[[  0,  0	,   0		,0	,	0	,0	,0	]]			] 
+											,'FRAME_END_RIGHT'				: [ 'VOBJ'		,[1		,4		,4	]			,[[  75, 0	,   0		,0	,	0	,0	,0	]]			]										
+										},										 			 
+				'ALUM_FRAME'			:{										 			 
+											 'FRAME_TOP'					: [ 'VOBJ'		,[1		,1		,1	]			,[[  0,  0	,  81		,0	,	0	,0	,0	]]			] 
+											,'FRAME_BOTTOM'					: [ 'VOBJ'		,[1		,2		,2	]			,[[  0,  0	,  18		,0	,	0	,0	,0	]]			] 
+											,'FRAME_MID'					: [ 'VOBJ'		,[1		,3		,3	]			,[[  0,  0	,  46		,0	,	0	,0	,0	]]			] 
+											,'FRAME_END_LEFT'				: [ 'VOBJ'		,[1		,4		,4	]			,[[  0,  0	,   0		,0	,	0	,0	,0	]]			] 
+											,'FRAME_END_RIGHT'				: [ 'VOBJ'		,[1		,4		,4	]			,[[  75, 0	,   0		,0	,	0	,0	,0	]]			]										
+										},										 			 
+				'ALUM_FRAME_TOP'		:{										 			 
+											 'FRAME_TOP'					: [ 'VOBJ'		,[1		,1		,1	]			,[[  0,  0	,  81		,0	 ,	0	,0	,0	]]			] 
+											,'FRAME_END_LEFT'				: [ 'VOBJ'		,[1		,4		,4	]			,[[  0,  0	,   0		,0	 ,	0	,0	,0	]]			] 
+											,'FRAME_END_RIGHT'				: [ 'VOBJ'		,[1		,4		,4	]			,[[  75, 0	,   0		,0	 ,	0	,0	,0	]]			]										
+										}, 										 			 
+				'MBR_AIR_PIPING'		:{	'PIPE_PVC_2_INCH_L_96'			: [ 'PIPE'		,[1.1	,96		,0	]			,[[	-3 ,12	,  16		,0	 ,  0	,0	,0	]
+																				 			 								,[	82 ,12	,  16		,0	 ,  0	,0	,0	]]			]
+ 											,'PIPE_PVC_2_INCH_L_86'			: [ 'PIPE'		,[1.1	,86		,0	]			,[[	-3 , 8	,  16		,'y' , 90	,0	,0	]
+																				 			 								,[	-3 ,16	,  16		,'y' , 90	,0	,0	]]			]
+											,'PIPE_PVC_2_INCH_L_8'			: [ 'PIPE'		,[1.1	,10		,0	]			,[[	-3 , 7	,  16		,'x' ,-90	,0	,0	]
+																				 			 								, [	82 , 7	,  16		,'x' ,-90	,0	,0	]]			]
+											},									 			 							 
+				'PERMEATE_MANIFOLD_150' :{	'PIPE_PVC_2_INCH_L_86'			: [ 'PIPE'		,[1.9	,82		,0	]			,[[  0 ,  0	,   0		,'y' , 90 	,0	,0	]]			]
+ 							 				,'BARBS'						: [ 'WOXZ'		,[68	,.5		,2	]			,[[  8 ,-.5	, 1.5		,'x' , 10	,0	,0	]
+																				 			 								,[  8 , .5	, 1.5		,'x' ,-10	,0	,0	]]			]
+											},	  								 			 
+   				'MBRS_FRAME_SET'			:{									 			 
+									'union' :{ 									 			 
+								 			'PERMEATE_MANIFOLD_150'			: [ 'VOBJ'		,[1		,4		,4	]			,[[ -2 , 18  ,5.75		,'x',-10	,0	,0	]]			] 
+											,'ALUM_FRAME'					: [ 'VOBJ'		,[1		,3		,3	]			,[[  0 ,  0  ,   0		,0	,0		,0	,0	]]			] 
+ 											,'MBR_AIR_PIPING'				: [ 'VOBJ'		,[1		,1		,1	]			,[[  0 ,  0  ,   0		,0	,0		,0	,0	]]			]
+										}  										 			 
+							},													 			 
+   				'DRAWINGSET' :{													 			 
+																				 			 
+     	    							  'MBRS_FRAME_SET' 					: [ 'VOBJ'		,[5		,4		,0	]			,[[ -200 ,-275 , 0  		,'X' , -90 ,  0	, 0	]
+																															 ,[  420 ,-275 , 0  		,'X' , -90 ,'y'	,90	]
+																															]		
+																				]		 
+ 	 	    							, 'ALUM_FRAME_TOP' 					: [ 'VOBJ'		,[5		,3		,0	]			,[[ -670 , -50 , 0  		,  0 ,   0 ,  0	, 0	]]		]  	 
+	 	    							, 'ALUM_FRAME_BOTTOM' 				: [ 'VOBJ'		,[5		,1		,0	]			,[[ -670 ,-150 , 0  		,'X' ,-180 ,  0	, 0	]]		]		 
+ 		 }  
+}
+
+// JSCad annoations that reside in 3d Scene space
+ var	 threeJSAnnotate=[
+			  {x : -670 ,y :  80 , rz :   0 ,color : 0xff0000 ,fontsz :  7 ,scale: 5 ,line :  [3,28,51, 75    ]  ,isx : 1	,txy: [{x:  0,y: 15}	,{x:  0 ,y:15}	,{x :  0, y : 15}	,{x:  0,y:15}				] } 
+			 ,{x : -200 ,y : 325 , rz :   0 ,color : 0xff0000 ,fontsz :  7 ,scale: 5 ,line :  [0, 3,75, 78    ]  ,isx : 1	,txy: [{x:  0,y: 15}	,{x:  0 ,y:15}	,{x : -2, y : 15}	,{x:  4,y:15}				] } 
+			 ,{x :  230 ,y :-275 , rz :   0 ,color : 0xff0000 ,fontsz :  7 ,scale: 5 ,line :  [0,18,46, 84,120]  ,isx : 0	,txy: [{x:-15,y:  2}	,{x:-15 ,y: 2}	,{x :-15, y :  2}	,{x:-15,y: 2},{x:-15,y: 2}	] } 
+			 ,{x : -255 ,y :-275 , rz :   0 ,color : 0xff0000 ,fontsz :  7 ,scale: 5 ,line :  [0, 4,15,112    ]  ,isx : 0	,txy: [{x:-15,y:  2}	,{x:-15 ,y: 2}	,{x :-15, y :  2}	,{x:-15,y: 2}				] } 
+			 ,{x : -720 ,y : -50 , rz :   0 ,color : 0xff0000 ,fontsz :  7 ,scale: 5 ,line :  [2,23           ]  ,isx : 0	,txy: [{x:-15,y:  2}	,{x:-15 ,y: 2}					 								] } 
+			 ,{x : -720 ,y :-275 , rz :   0 ,color : 0xff0000 ,fontsz :  7 ,scale: 5 ,line :  [2, 8,16,23     ]  ,isx : 0	,txy: [{x:-15,y:  2}	,{x:-15 ,y: 2}	,{x :-15, y :  2}	,{x:-15,y: 2}				] } 
+];
+//	
+// Images and text that front end the WebGL rendering DOM element 
+//
+ var	headsUpDisplay = { 
+			    id :	'imageid'
+			, frame: 	'acadtemplate1.png'	 
+			, etxt : [	  
+			 {x : 1330 ,y : 580 , rz : -90 ,color : 'blue'			,fontsz : 52 ,scale: 1 ,strng : "XXX  FRAME"							} 
+			,{x : 1410 ,y : 580 , rz : -90 ,color : 'blue'			,fontsz : 52 ,scale: 1 ,strng : "XXXX YYYYYYY "							} 
+			,{x : 1300 ,y : 650 , rz :   0 ,color : 'blue'			,fontsz : 14 ,scale: 1 ,strng : "Ima Notta P.E"							} 
+			,{x : 1375 ,y : 844 , rz :   0 ,color : 'blue'			,fontsz : 30 ,scale: 1 ,strng : "M-2"									} 
+		//	,{x : 100  ,y : 100 , rz :   0 ,color : 'deeppink'		,fontsz : 40 ,scale: 1 ,strng : "Press 'f' for front view "				} 
+										]
+};	
+//	
+//	The entire set of options sent to JSCad/Three.js/SVG to render and view online
+//	
+ var options ={
+		 this_				:	null	
+		,containerElm_		:	document.getElementById("viewer")		
+		,widthDefault_		:	"1600px"								
+		,heightDefault_		:	"900px"										
+		,width_				:	"1600px"									
+		,height_			:	"900px"									
+		,heightRatio_		:	16/9 									
+		,perspective_		:	45
+		,drawOptions_		:	{ lines : false, faces : true}
+		,defaultColor_		:	[ 0, 0, 1   ,1]
+		,bgColor_			:	[.93,.93,.93,1]
+		,drawFaces_			:	true	
+		,background_		:	true
+		,drawLines_			:	false 	
+		,cameraStart_		:	'f'
+		,csgScript_			:	"jscad.jscad"	
+ 		,headsUpDisplay_	:	headsUpDisplay
+ 		,pointcloudName_	:	null
+		,threeJSEnvObjs_	:	null
+		,threeJSAnnotate_	:	threeJSAnnotate
+		,axisxyz_			:	false
+		,camera_			:  'ortho'
+		,renderer_			:  'webgl'
+		,controls_			:  'ortho'
+};	
+	var gViewer		= null;
+	
+	function document_ready(){  	gViewer	 =	new OpenJSONCad.Viewer( options); 	};
+
+ </script>
+ <script id="jscad.jscad"  >function main() {  return makeVirtualObject(nodes['DRAWINGSET'] );}
+</script>
+</head>
+<body  onload="document_ready()" >	
+</body>
+</html>
