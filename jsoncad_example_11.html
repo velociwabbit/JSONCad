@@ -1,0 +1,139 @@
+<html>
+<head>
+ <title>JSONCad Parser Example 1</title>
+<script type="text/javascript" src="three70.js"							></script>
+<script type="text/javascript" src="OrthographicTrackballControls.js"	></script> 
+<script type="text/javascript" src="potree.js"							></script>
+<script type="text/javascript" src="BinaryLoader.js"					></script>
+<script type="text/javascript" src="csg.js"								></script> 
+<script type="text/javascript" src="threecsg.js"						></script> 
+<script type="text/javascript" src="Arial Narrow_Regular.js"			></script>
+<script type="text/javascript" src="openscad.js"						></script> 
+<script type="text/javascript" src="jsoncad_base.js"					></script>
+<script type="text/javascript" src="jsoncad_parser.js"					></script>
+<script type="text/javascript" src="jsoncad_annotate.js"				></script>
+<script type="text/javascript" >
+ 
+ 
+//  Example  of calling wire based line and line segment generators. 
+//  The boxes BOXMARKS were used to ensure that the lines were rotated and located correctly.
+//  Note that each line is delineated by two sets of coordinates [x0,y0,z0,x1,y1,z1] and can 
+//  be relocated as any instance.
+//  In contrast the line segments (LSG3 verbs) use the first paramater [x0,y0,z0] as the starting
+//  Point then uses the instances for each additional point.
+// 
+// The commented out lines are individual lines that were used to ensure that the lines were
+// oriented correctly to their correct locations.
+//
+
+var nodes = {
+ 	 
+    'TEST_LIST': {
+ 
+ 
+ 	   'BOXMARKS': ['BOXZ', [ 1, 1, 1, 1,null], [			//0
+  	 	 												       {x: -10 ,y: -20		,z:   -20	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [0, 0,1, 1],size: [1, 1, 1]}
+	 													     , {x: -10   ,y: -20	,z:    20	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,0, 1],size: [1, 1, 1]}
+   	 	 												     , {x: -10	 ,y:  20	,z:   -20	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [0, 0,1, 1],size: [1, 1, 1]}
+	 													     , {x: -10   ,y:  20	,z:    20	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,0, 1],size: [1, 1, 1]}
+	 													     , {x:  10   ,y: -20	,z:   -20	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,1, 1],size: [1, 1, 1]}
+	 													     , {x:  10   ,y: -20	,z:    20	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,1, 1],size: [1, 1, 1]}
+ 	 													     , {x:  10   ,y:  20	,z:   -20	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,1, 1],size: [1, 1, 1]}
+	 													     , {x:  10   ,y:  20	,z:    20	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,1, 1],size: [1, 1, 1]}
+	 
+	  														]
+	  										] 
+	// uncomment these items to see lines that connect to the box corners 
+
+  	//  	, 'TRYLine01' : ['LIN3', [-10, -20,  -20,  -10,   -20,   20, 1,null], [     {x: 0	,y: 0	,z: 0	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [0, 1,1, 1],size: [1, 1, 1]}]	]
+	//  	, 'TRYLine11' : ['LIN3', [-10, -20,   20,  -10,    20,   20, 1,null], [     {x: 0	,y: 0	,z: 0	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 1,0, 1],size: [1, 1, 1]}]	]
+ 
+	//  	, 'TRYLine12' : ['LIN3', [-10, -20,   20,  10,    -20,    20, 1,null], [     {x: 0	,y: 0	,z: 0	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,0, 1],size: [1, 1, 1]}]	]
+	//
+	//  	, 'TRYLine17' : ['LIN3', [ 10, -20,   20,  10,     20,    20, 1,null], [     {x: 0	,y: 0	,z: 0	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,0, 1],size: [1, 1, 1]}]	]
+	//  	, 'TRYLine13' : ['LIN3', [ 10, -20,   20,  10,    -20,   -20, 1,null], [     {x: 0	,y: 0	,z: 0	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,0, 1],size: [1, 1, 1]}]	]
+	//
+	//  	, 'TRYLine14' : ['LIN3', [ 10, -20,  -20,  10,     20,   -20, 1,null], [     {x: 0	,y: 0	,z: 0	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,0, 1],size: [1, 1, 1]}]	]
+	//
+	//
+	//  	, 'TRYLine15' : ['LIN3', [ 10,  20,  -20,  10,     20,    20, 1,null], [     {x: 0	,y: 0	,z: 0	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,0, 1],size: [1, 1, 1]}]	]
+	//  	, 'TRYLine16' : ['LIN3', [ 10,  20,   20,  10,    -20,    20, 1,null], [     {x: 0	,y: 0	,z: 0	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,0, 1],size: [1, 1, 1]}]	]
+	//
+	//	
+	//  	, 'TRYLine21' : ['LIN3', [-10,  20,  -20,  -10,    20,   20, 1,null], [     {x: 0	,y: 0	,z: 0	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,0, 1],size: [1, 1, 1]}]	]
+	//
+	//  	, 'TRYLine31' : ['LIN3', [-10,  20,   20,   10,   -20,  -20, 1,null], [     {x: 0	,y: 0	,z: 0	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,0, 1],size: [1, 1, 1]}]	]
+	//
+	//  	, 'TRYLine41' : ['LIN3', [ 10, -20,  -20,   10,   -20,   20, 1,null], [     {x: 0	,y: 0	,z: 0	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,0, 1],size: [1, 1, 1]}]	]
+	//
+	//  	, 'TRYLine51' : ['LIN3', [ 10, -20,   20,   10,    20,  -20, 1,null], [     {x: 0	,y: 0	,z: 0	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,0, 1],size: [1, 1, 1]}]	]
+	//
+	//  	, 'TRYLine61' : ['LIN3', [ 10,  20,  -20,   10,    20,   20, 1,null], [     {x: 0	,y: 0	,z: 0	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,0, 1],size: [1, 1, 1]}]	]
+	//
+	//  	, 'TRYLine71' : ['LIN3', [ 10,  20,   20,  -10,   -20,  -20, 1,null], [     {x: 0	,y: 0	,z: 0	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,0, 1],size: [1, 1, 1]}]	]
+
+
+	//								x0,	y0,	  z0,	x1    y1     z1 size color, pipe radius (optional parm)		
+	  	, 'TRYLine00' : ['LIN3', [  0,   0,    0,  -10,   -20,  -20, 1,null, .125], [     {x: 0	,y: 0	,z: 0	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [0, 0,1, 1],size: [1, 1, 1]}]	]
+	  	, 'TRYLine10' : ['LIN3', [  0,   0,    0,  -10,   -20,   20, 1,null, .125], [     {x: 0	,y: 0	,z: 0	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,0, 1],size: [1, 1, 1]}]	]
+	  	, 'TRYLine20' : ['LIN3', [  0,   0,    0,  -10,    20,  -20, 1,null, .125], [     {x: 0	,y: 0	,z: 0	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [0, 0,1, 1],size: [1, 1, 1]}]	]
+	  	, 'TRYLine30' : ['LIN3', [  0,   0,    0,  -10,    20,   20, 1,null, .125], [     {x: 0	,y: 0	,z: 0	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [0, 0,1, 1],size: [1, 1, 1]}]	]
+	  	, 'TRYLine40' : ['LIN3', [  0,   0,    0,   10,   -20,  -20, 1,null, .125], [     {x: 0	,y: 0	,z: 0	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,0, 1],size: [1, 1, 1]}]	]
+ 	  	, 'TRYLine50' : ['LIN3', [  0,   0,    0,   10,   -20,   20, 1,null, .125], [     {x: 0	,y: 0	,z: 0	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,1, 1],size: [1, 1, 1]}]	] 
+	  	, 'TRYLine60' : ['LIN3', [  0,   0,    0,   10,    20,  -20, 1,null, .125], [     {x: 0	,y: 0	,z: 0	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,1, 1],size: [1, 1, 1]}]	]
+	  	, 'TRYLine70' : ['LIN3', [  0,   0,    0,   10,    20,   20, 1,null, .125], [     {x: 0	,y: 0	,z: 0	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,1, 1],size: [1, 1, 1]}]	]
+
+						 //  x0,y0, z0 size, color, radius(optional)
+	   	,'TRYLsegs': ['LSG3', [0, 0, 0, 1,null, .125], [		//  x1    y1        z1 ...
+ 	 														   {x: -10   ,y: -20    ,z:   -20	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [0, 0,1, 1],size: [1, 1, 1]}
+	 														 , {x: -10   ,y: -20	,z:    20	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,0, 1],size: [1, 1, 1]}
+	 														 , {x: -10	 ,y:  20	,z:   -20	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [0, 0,1, 1],size: [1, 1, 1]}
+	 														 , {x: -10   ,y:  20	,z:    20	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,0, 1],size: [1, 1, 1]}
+	 														 , {x:  10   ,y: -20	,z:   -20	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,1, 1],size: [1, 1, 1]}
+	 														 , {x:  10   ,y: -20	,z:    20	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,1, 1],size: [1, 1, 1]}
+	 														 , {x:  10   ,y:  20	,z:   -20	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,1, 1],size: [1, 1, 1]}
+	 														 , {x:  10   ,y:  20	,z:    20	,r1: {axis: 0,degrees: 0},r2: {axis: 0,degrees: 0},color: [1, 0,1, 1],size: [1, 1, 1]}
+	  
+	   														]
+	   														]
+    }
+}
+//	
+//	The entire set of options sent to JSCad/Three.js/SVG to render and view online
+//	
+	
+ var options ={
+		 this_				:	null	
+		,containerElm_		:	document.getElementById("viewer")		
+		,widthDefault_		:	"1600px"								
+		,heightDefault_		:	"900px"										
+		,width_				:	"1600px"									
+		,height_			:	"900px"									
+		,heightRatio_		:	16/9 									
+		,perspective_		:	45
+		,drawOptions_		:	{ lines : false, faces : true}
+		,defaultColor_		:	[ 0, 0, 1   ,1]
+		,bgColor_			:	[.93,.93,.93,1]
+		,drawFaces_			:	true	
+		,background_		:	true
+		,drawLines_			:	false 	
+		,csgScript_			:	"jscad.jscad"	
+ 		,headsUpDisplay_	:	null	 
+ 		,pointcloudName_	:	null	 
+		,threeJSEnvObjs_	: 	null	 
+		,threeJSAnnotate_	:   null
+		,axisxyz_			:	true
+		,camera_			:  'persp'
+		,renderer_			:  'webgl'
+		,controls_			:  'ortho'
+};	
+	var gViewer		= null;
+	function document_ready(){  	gViewer	 =	new OpenJSONCad.Viewer( options); 	};
+ </script>
+ <script id="jscad.jscad"  >function main() {  return makeVirtualObject(nodes['TEST_LIST'] );}</script>
+</head>
+<body  onload="document_ready()" >	
+</body>
+</html>
+
+ 
